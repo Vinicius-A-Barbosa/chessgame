@@ -1,0 +1,13 @@
+.chessTileSquare {
+    width: 80px;
+    height: 80px;
+    position: relative;
+}
+
+.chessTileSquare.black {
+    background: #6d6d6d;
+}
+
+.chessTileSquare.white {
+    background: #cccccc;
+}
