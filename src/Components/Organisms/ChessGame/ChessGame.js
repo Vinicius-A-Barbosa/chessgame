@@ -63,16 +63,12 @@ class ChessGame extends Component {
         super();
         this.state = {
             chessTableSimulator: generatedInicialTable(),
-            movimentacao: {
-                posicaoInitial: {
-                    row: '',
-                    col: '',
-                },
-                posicaoFinal: {
-                    row: '',
-                    col: '',
-                },
+            posicaoInitial: {
+                row: '',
+                col: '',
             },
+            movimentacao: [],
+            colorToMove: 'white',
         };
     }
 
@@ -111,9 +107,8 @@ class ChessGame extends Component {
     }
 
     mutateChessTable(i, j){
-        const {chessTableSimulator, movimentacao} = this.state;
+        const {chessTableSimulator, posicaoInitial, movimentacao} = this.state;
         const newChessTableSimulator = { ...chessTableSimulator};
-        const {posicaoInitial, posicaoFinal} = movimentacao;
         const pieceInitial = newChessTableSimulator[posicaoInitial.row][posicaoInitial.col].piece;
         const colorInitial = newChessTableSimulator[posicaoInitial.row][posicaoInitial.col].color;
         const pieceFinal = newChessTableSimulator[i][j].piece;
@@ -125,40 +120,29 @@ class ChessGame extends Component {
         this.setState({
             ...this.state,
             chessTableSimulator: newChessTableSimulator,
+            posicaoInitial: {
+                row: '',
+                col: '',
+            },
         });
     }
     
     handleClick(i, j){
-        const { chessTableSimulator, movimentacao } = this.state;
-        const { posicaoInitial, posicaoFinal } = movimentacao;
-        console.log(movimentacao);
-        if (((posicaoInitial.row === '' && posicaoInitial.col === '') || (posicaoFinal.row !== '' && posicaoFinal.col !== '')) && chessTableSimulator[i][j].piece !== '') {
-            this.setState({
-                ...this.state,
-                movimentacao: {
-                    ...this.state.movimentacao,
+        const { chessTableSimulator, posicaoInitial } = this.state;
+        console.log(posicaoInitial, i, j);
+        if ((chessTableSimulator[i][j].piece !== '' || (posicaoInitial.row !== '' && posicaoInitial.col !== '')) && (posicaoInitial.row.toString() + posicaoInitial.col.toString() !== (i.toString() + j.toString()))) {
+            if (posicaoInitial.row === '' && posicaoInitial.col === '') {
+                this.setState({
+                    ...this.state,
                     posicaoInitial: {
                         row: i,
                         col: j,
                     },
-                    posicaoFinal: {
-                        row: '',
-                        col: '',
-                    },
-                },
-            });
-        } else if (posicaoInitial.row !== '' && posicaoInitial.col !== '' && chessTableSimulator[posicaoInitial.row][posicaoInitial.col].piece !== '') {
-            this.setState({
-                ...this.state,
-                movimentacao: {
-                    ...this.state.movimentacao,
-                    posicaoFinal: {
-                        row: i,
-                        col: j,
-                    },
-                },
-            });
-            this.mutateChessTable(i, j);
+                });
+            } else {
+                console.log('entrei');
+                this.mutateChessTable(i, j);
+            }
         }
     }
 
